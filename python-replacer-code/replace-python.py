@@ -38,7 +38,10 @@ def copy_file_to_dir(source_file_path, dest_dir_path, recursive, ignore_files):
                 old_file_path = os.path.join(root, filename)
                 new_file_name, _ = os.path.splitext(filename)
                 new_file_path = os.path.join(root, new_file_name + source_file_ext)
-                shutil.copy(source_file_path, new_file_path)
+                try:
+                    shutil.copy(source_file_path, new_file_path)
+                except PermissionError:
+                    print(f"Permission refusée pour le fichier {new_file_path}. Le fichier n'a pas été copié.")
     else:
         for filename in os.listdir(dest_dir_path):
             if any(ignore in filename for ignore in ignore_files):
@@ -47,7 +50,11 @@ def copy_file_to_dir(source_file_path, dest_dir_path, recursive, ignore_files):
             if os.path.isfile(old_file_path):
                 new_file_name, _ = os.path.splitext(filename)
                 new_file_path = os.path.join(dest_dir_path, new_file_name + source_file_ext)
-                shutil.copy(source_file_path, new_file_path)
+                try:
+                    shutil.copy(source_file_path, new_file_path)
+                except PermissionError:
+                    print(f"Permission refusée pour le fichier {new_file_path}. Le fichier n'a pas été copié.")
+    input("Appuyez sur une touche pour quitter...")
 
 def main():
     source_file_path = input("Veuillez entrer le chemin vers le fichier source: ")
